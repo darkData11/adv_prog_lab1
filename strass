@@ -1,0 +1,145 @@
+package matmul;
+
+/**
+ * Created by hassaan on 2/12/2016.
+ */
+public class strass {
+    //=========================Strassen dependencies============================
+
+
+    public int[][] sub(int[][] a, int[][] b) // subtraction
+    {
+        int n = a.length;
+
+        int[][] c = new int[n][n];
+
+        for(int i=0; i<n; i++)
+        {
+            for (int j=0; j<n; j++)
+            {
+                c[i][j] = a[i][j] - b[i][j];
+            }
+        }
+
+        return c;
+    }
+
+    public int[][] add(int[][] a, int[][] b)//addition
+    {
+        int n = a.length;
+
+        int[][] c = new int[n][n];
+
+        for(int i=0; i<n; i++)
+        {
+            for (int j=0; j<n; j++)
+            {
+                c[i][j] = a[i][j] + b[i][j];
+            }
+        }
+
+        return c;
+    }
+
+    public void split(int[][] P, int[][] C, int iB, int jB)
+
+    {
+
+        for(int i1 = 0, i2 = iB; i1 < C.length; i1++, i2++)
+
+            for(int j1 = 0, j2 = jB; j1 < C.length; j1++, j2++)
+
+                C[i1][j1] = P[i2][j2];
+
+    }
+
+    public void join(int[][] C, int[][] P, int iB, int jB)
+
+    {
+
+        for(int i1 = 0, i2 = iB; i1 < C.length; i1++, i2++)
+
+            for(int j1 = 0, j2 = jB; j1 < C.length; j1++, j2++)
+
+                P[i2][j2] = C[i1][j1];
+
+    }
+
+    /*public static void split(int[][] main, int[][] n_ew, int dim_row, int dim_col)
+    {
+        for(int i=0, j=dim_row; i<n_ew.length; i++, j++){
+            for(int k=0, l=dim_col; k<n_ew.length; k++, l++){
+                n_ew[i][k] = main[j][l];
+            }
+        }
+    }
+
+    public static void join(int[][] main, int[][] n_ew, int dim_row, int dim_col)
+    {
+        for(int i=0, j=dim_row; i<n_ew.length; i++, j++){
+            for(int k=0, l=dim_col; k<n_ew.length; k++, l++) {
+                main[j][l] = n_ew[i][k];
+            }
+        }
+    }*/
+
+
+    public int[][] s_mult(int[][] a, int[][] b)
+    {
+        int n = a.length;
+        int[][] resultnt = new int[n][n];
+
+        if(n == 1)// base case for recursion
+        {
+            resultnt[0][0] = a[0][0] * b[0][0];
+        }
+
+        else
+        {
+            int[][] a11 = new int[n/2][n/2]; //quadrant creation
+            int[][] a12 = new int[n/2][n/2];
+            int[][] a21 = new int[n/2][n/2];
+            int[][] a22 = new int[n/2][n/2];
+
+            int[][] b11 = new int[n/2][n/2];
+            int[][] b12 = new int[n/2][n/2];
+            int[][] b21 = new int[n/2][n/2];
+            int[][] b22 = new int[n/2][n/2];
+
+
+            //break in quadrants
+            split(a, a11, 0, 0);
+            split(a, a12, 0, n/2);
+            split(a, a21,n/2, 0);
+            split(a, a22, n/2, n/2);
+
+            split(b, b11, 0, 0);
+            split(b, b12, 0, n/2);
+            split(b, b21,n/2, 0);
+            split(b, b22, n/2, n/2);
+
+
+            int[][] m1 = s_mult(add(a11, a22), add(b11, b22)); //strassen formula
+            int[][] m2 = s_mult(add(a21, a22), b11);
+            int[][] m3 = s_mult(a11, sub(b12, b22));
+            int[][] m4 = s_mult(a22, sub(b21, b11));
+            int[][] m5 = s_mult(add(a11, a12), b22);
+            int[][] m6 = s_mult(sub(a21, a11), add(b11, b12));
+            int[][] m7 = s_mult(sub(a12, a22), add(b21, b22));
+
+
+            int[][] c11 = add(sub(add(m1, m4), m5), m7); // still the strassen formula
+            int[][] c12 = add(m3, m5);
+            int[][] c21 = add(m2, m4);
+            int[][] c22 = add(sub(add(m1, m3), m2), m6);
+
+
+            join(c11, resultnt, 0, 0);
+            join(c12, resultnt, 0, n/2);
+            join(c21, resultnt, n/2, 0);
+            join(c22, resultnt, n/2, n/2);
+
+        }
+        return resultnt;
+    }
+}
