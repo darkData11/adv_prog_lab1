@@ -1,0 +1,116 @@
+package matmul;
+
+import java.util.Random;
+import java.util.Scanner;
+
+
+/**
+ * Created by hassaan on 2/12/2016.
+ */
+public class multiply {
+
+    //=================Simple Matrix multiplication
+    public static int[][] standard(int[][]a, int[][]b, int a_r, int a_c, int b_r, int b_c )
+    {
+        int ans[][] = new int[a_r][b_c];
+        int sum = 0;
+        for(int i=0; i<a_r; i++){
+            for(int j=0; j<b_c; j++){
+                for(int k=0; k<b_r; k++){
+                    sum += a[i][k] * b[k][j];
+                }
+                ans[i][j] = sum;
+                sum = 0;
+            }
+        }
+
+        return ans;
+    }
+
+
+    public static void main(String args[])
+    {
+        int a_r,a_c;
+        int b_r,b_c;
+        Random rand = new Random();
+
+        Scanner dim = new Scanner(System.in);
+        System.out.print("Matrix A dimensions:");
+
+        a_r = dim.nextInt();
+        a_c = dim.nextInt();
+
+        int a[][] = new int[a_r][a_c];
+
+
+        for(int i = 0; i<a_r; i++){
+            for(int j = 0; j<a_c; j++){
+                a[i][j] = rand.nextInt(30);
+            }
+        }// generating random matrix a
+
+        System.out.print("Matrix B dimensions:");
+
+        b_r = dim.nextInt();
+        b_c = dim.nextInt();
+
+        int b[][] = new int[b_r][b_c];
+
+        int product[][] = new int[a_r][b_c];
+
+        if(a_c != b_r)
+        {
+            System.out.print("Invalid ! Can't multiply");
+        }
+
+        else
+        {
+            for(int i = 0; i<b_r; i++){
+                for(int j = 0; j<b_c; j++){
+                    b[i][j] = rand.nextInt(30);
+                }
+            }// generating random matrix b
+
+            System.out.print("A:\n");
+            for(int i = 0; i<a_r; i++){
+                for(int j = 0; j<a_c; j++){
+                    System.out.print(a[i][j]+"\t");
+                }
+                System.out.print("\n");
+            }
+
+            System.out.print("B:\n");
+            for(int i = 0; i<b_r; i++){
+                for(int j = 0; j<b_c; j++){
+                    System.out.print(b[i][j]+"\t");
+                }
+                System.out.print("\n");
+            }
+
+
+            product = standard(a, b, a_r, a_c, b_r, b_c);
+
+            System.out.print("Standard Multiplication:\n");
+            for(int i = 0; i<a_r; i++){
+                for(int j = 0; j<b_c; j++){
+                    System.out.print(product[i][j]+"\t");
+                }
+                System.out.print("\n");
+            }
+
+            //strassen call
+            strass s = new strass();
+            product = s.s_mult(a, b);
+
+            System.out.print("Strassen Multiplication:\n");
+            for(int i = 0; i<a_r; i++){
+                for(int j = 0; j<b_c; j++){
+                    System.out.print(product[i][j]+"\t");
+                }
+                System.out.print("\n");
+            }
+        }
+
+
+    }
+}
